@@ -35,22 +35,10 @@ namespace FinalProject368
         {
             FinalProject368DatabaseDataContext db = new FinalProject368DatabaseDataContext();
 
-            /*var query = db.UserAccounts.Where(c => c.Username == usernameTextBox.Text && c.Password
-            == passwordTextBox.Text)
-           
-            .Select( c=>c.Username.First());*/
-            /*var usersToLogOut = (from user in db.UserAccounts
-                                 where user.isLoggedIn == true
-                                 update user.isLoggedIn==false);*/
-
-
             var userToLogIn = (from user in db.UserAccounts
                                where user.Username == usernameTextBox.Text
                                && user.Password == passwordTextBox.Text
                                select user);
-
-           
-           
 
             var loggedInUsers = (from user in db.UserAccounts
                                  where user.isLoggedIn == true

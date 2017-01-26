@@ -20,12 +20,10 @@ namespace FinalProject368
         private void userPage_Load(object sender, EventArgs e)
         {
             FinalProject368DatabaseDataContext db = new FinalProject368DatabaseDataContext();
-            
+
             var userLoggedIn = (from user in db.UserAccounts
                                 where user.isLoggedIn == true
                                 select user);
-
-
 
             this.usernameTextBox.Text = userLoggedIn.First().Username;
             this.fnameTextBox.Text = userLoggedIn.First().Fname;
@@ -33,8 +31,6 @@ namespace FinalProject368
             this.passwordTextBox.Text = userLoggedIn.First().Password;
             this.balanceTextBox.Text = ("" + userLoggedIn.First().Balance);
             invalidEntryLabel.Hide();
-
-
         }
 
         private void userAccountsBindingNavigatorSaveItem_Click(object sender, EventArgs e)
@@ -67,28 +63,25 @@ namespace FinalProject368
                                 where user.Username == usernameTextBox.Text
                                 && user.Password == passwordTextBox.Text
                                 select user.Username);
-            if(userLoggedIn.Count()>0)
+            if (userLoggedIn.Count() > 0)
             {
                 var historyToShow = db.Purchases.Where(d => d.Username == userLoggedIn.First());
                 string s = "";
                 foreach (var h in historyToShow)
                 {
-                    s = s + "PurchaseID: "+h.PurchaseId+" UserId: " + h.UserId+ " Username: " + h.Username + " Fname: " + h.Fname + " h.Lname: "
+                    s = s + "PurchaseID: " + h.PurchaseId + " UserId: " + h.UserId + " Username: " + h.Username + " Fname: " + h.Fname + " h.Lname: "
                         + h.Lname + "\r\nItem ID: " + h.ItemID + " Item Name: " + h.ItemName + " Item Quantity: " + h.ItemQuantity
                      + "\r\nPurchase Date: " + h.Date + " Purchase Cost: " + h.BalanceChange + " Balance After: " + h.BalanceAfter + "\r\n";
                 }
                 purchasesHistoryBox.Text = s;
             }
-           
-                                 
-           
         }
 
         private void allPurchasesDateButton_Click(object sender, EventArgs e)
         {
             FinalProject368DatabaseDataContext db = new FinalProject368DatabaseDataContext();
             var userLoggedIn = (from user in db.UserAccounts
-                                where user.isLoggedIn==true
+                                where user.isLoggedIn == true
                                 select user.Username);
             if (userLoggedIn.Count() > 0)
             {
@@ -103,7 +96,7 @@ namespace FinalProject368
                 }
                 purchasesHistoryBox.Text = s;
             }
-            
+
         }
 
         private void allPurchasesPriceButton_Click(object sender, EventArgs e)
@@ -113,21 +106,18 @@ namespace FinalProject368
                                 where user.Username == usernameTextBox.Text
                                 && user.Password == passwordTextBox.Text
                                 select user.Id);
-           
+
             var historyToShow = db.Purchases.Where(d => d.UserId == userLoggedIn.First())
             .OrderBy(d => d.BalanceChange);
 
             string s = "";
             foreach (var h in historyToShow)
             {
-                s = s+ "ID:" + h.UserId + " Username: " + h.Username + " Fname: " + h.Fname + " Lname: " 
+                s = s + "ID:" + h.UserId + " Username: " + h.Username + " Fname: " + h.Fname + " Lname: "
                     + h.Lname + "\r\nItem ID: " + h.ItemID + " Item Name: " + h.ItemName + " Item Quantity: " + h.ItemQuantity
-                 + "\r\nPurchase Date: " + h.Date + " Purchase Cost: " + h.BalanceChange + " Balance After: " + h.BalanceAfter+"\r\n";
+                 + "\r\nPurchase Date: " + h.Date + " Purchase Cost: " + h.BalanceChange + " Balance After: " + h.BalanceAfter + "\r\n";
             }
             purchasesHistoryBox.Text = s;
-            
-
-
         }
 
         private void signOutButton_Click(object sender, EventArgs e)
@@ -141,7 +131,7 @@ namespace FinalProject368
                 userLoggedIn.First().isLoggedIn = false;
                 db.SubmitChanges();
             }
-            
+
             Form f = new Startup();
             f.Show();
             this.Hide();
@@ -151,7 +141,7 @@ namespace FinalProject368
         private void payButton_Click(object sender, EventArgs e)
         {
             int payInt;
-            if (Int32.TryParse(payBox.Text,out payInt)||payBox.Text=="")
+            if (Int32.TryParse(payBox.Text, out payInt) || payBox.Text == "")
             {
                 invalidEntryLabel.Hide();
                 FinalProject368DatabaseDataContext db = new FinalProject368DatabaseDataContext();
@@ -168,7 +158,7 @@ namespace FinalProject368
             {
                 invalidEntryLabel.Show();
             }
-           
+
         }
     }
 }

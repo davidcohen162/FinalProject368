@@ -17,8 +17,6 @@ namespace FinalProject368
             InitializeComponent();
         }
 
-        
-
         private void login_Click(object sender, EventArgs e)
         {
             Form f = new Login();
@@ -64,44 +62,54 @@ namespace FinalProject368
             if (userLoggedIn.Count() > 0)
             {
                 usernameLabel.Text = userLoggedIn.First().Username;
-                if (userLoggedIn.First().Balance>100)
+                if (userLoggedIn.First().Balance > 100)
                 {
+
                     introTextBox.Text = "You owe too much. You can't purchase; the button will be hidden till you pay.";
+                    introTextBox.Show();
                     purchaseButton.Hide();
                     quantityBox.Hide();
                     quantityLabel.Hide();
-                    itemBox.Hide();
                     itemLabel.Hide();
+                    itemBox.Hide();
+                    login.Hide();
+                    signOutButton.Show();
+                    clearButton.Hide();
+                    userPageButton.Show();
+
                 }
                 introTextBox.Text = "To purchase an item, click anywhere on the content list except on the ID. "
                 + "\nThe Item in the row you click will be ashown on the bottom with  a default quantity of 1 "
                 + "\nCheck off the item and click Purchase to add to your purchase."
                 + "\nTo purchase the same item in multiple quantities, simply update the quantity box."
                 + "\nHowever, to purchase ddifferent items, you'll have to make separate purchases.";
-                purchaseButton.Show();
                 introTextBox.Show();
+                purchaseButton.Show();
+                quantityBox.Show();
+                quantityLabel.Hide();
                 itemLabel.Show();
                 itemBox.Show();
-                quantityBox.Show();
                 login.Hide();
                 signOutButton.Show();
+                clearButton.Show();
+                userPageButton.Show();
 
             }
             else
             {
-                purchaseButton.Hide();
                 introTextBox.Hide();
+                purchaseButton.Hide();
+                quantityBox.Hide();
+                quantityLabel.Hide();
                 itemLabel.Hide();
                 itemBox.Hide();
                 login.Show();
                 signOutButton.Hide();
+                clearButton.Hide();
+                userPageButton.Hide();
             }
             // TODO: This line of code loads data into the 'finalProject368DatabaseDataSet.ItemsForSale' table. You can move, or remove it, as needed.
             this.itemsForSaleTableAdapter.Fill(this.finalProject368DatabaseDataSet.ItemsForSale);
-            
-           
-            
-
         }
 
         private void purchaseButton_Click(object sender, EventArgs e)
@@ -116,24 +124,22 @@ namespace FinalProject368
 
             var itemToPurchase = db.ItemsForSales.Where(j => j.ItemName == itemBox.Text);
             var purchaseIDsTaken = db.Purchases.Select(j => j.PurchaseId);
-            if (purchaseIDsTaken.Count()>0)
+            //Account for used primary keys
+            if (purchaseIDsTaken.Count() > 0)
             {
-                foreach(var k in purchaseIDsTaken)
+                foreach (var k in purchaseIDsTaken)
                 {
                     if (k == counter)
                     {
                         counter++;
                     }
                 }
-                
+
             }
-
-
-
-
 
             Purchase p = new Purchase();
             //there is only one user logged in and one item that will meet id or name so first is used
+            //Setting a counter to set primary key
             p.PurchaseId = counter;
             p.UserId = userLoggedIn.First().Id;
             p.Username = userLoggedIn.First().Username;
@@ -145,9 +151,9 @@ namespace FinalProject368
             p.Date = DateTime.Now;
             //If purchase ID is taken increment counter
             int quantity = 0;
-            if (Int32.TryParse(quantityBox.Text, out quantity)&&quantity<=itemToPurchase.First().ItemQuantity)
+            if (Int32.TryParse(quantityBox.Text, out quantity) && quantity <= itemToPurchase.First().ItemQuantity)
             {
-               
+
                 integerQuantityLabel.Text = "";
                 p.ItemQuantity = quantity;
                 itemToPurchase.First().ItemQuantity = itemToPurchase.First().ItemQuantity - quantity;
@@ -160,7 +166,7 @@ namespace FinalProject368
                 itemBox.Clear();
                 quantityBox.Clear();
             }
-            else if (Int32.TryParse(quantityBox.Text, out quantity)&&quantity > itemToPurchase.First().ItemQuantity)
+            else if (Int32.TryParse(quantityBox.Text, out quantity) && quantity > itemToPurchase.First().ItemQuantity)
             {
                 integerQuantityLabel.Text = "Enter a lower number.";
             }
@@ -169,27 +175,11 @@ namespace FinalProject368
                 integerQuantityLabel.Text = "Enter a number.";
             }
 
-        }                   
-                                
-                                
-                            
-                           
-                            
-                        
-
-                               
-                        
-                    
-            
-
-
-            
-            
-       
+        }
 
         private void itemsForSaleDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            itemBox.Text= itemsForSaleDataGridView.Rows[e.RowIndex].Cells[1].Value.ToString();
+            itemBox.Text = itemsForSaleDataGridView.Rows[e.RowIndex].Cells[1].Value.ToString();
             quantityBox.Text = "1";
         }
 
